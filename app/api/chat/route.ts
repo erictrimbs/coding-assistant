@@ -13,7 +13,6 @@ export async function POST(req: Request) {
     return res.status(400).json({ error: 'Missing assistantId or message in request body' });
   }
 
-
   try {
     // Creates the message
     await openai.beta.threads.messages.create(threadId, { role: 'user', content: `"${message}"` })
@@ -31,22 +30,11 @@ export async function POST(req: Request) {
         return new Response(JSON.stringify({ status: 200, message: "Model returned an image. Try again." }))
       }
       const responseText = response.text.value;
-
       return new Response(JSON.stringify({ status: 200, message: responseText }));
     }
     else if (run.status in ['expired', 'failed', 'cancelled', 'incomplete', 'requires_action']) {
       return new Response(JSON.stringify({ status: 200, message: "Model didn't load. Try again." }))
     }
-
-
-
-    // const response = await openai.chat.completions.create({
-    //   model: "gpt-4o-mini",  // Adjust the model as needed
-    //   messages: [
-    //     { role: 'user', content: message }
-    //   ],
-    //   assistant_id: assistantId,
-    // });
 
   } catch (error) {
     console.error('Error processing chat message:', error);
