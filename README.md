@@ -1,3 +1,13 @@
+Use an example GitHub Repo: https://github.com/erictrimbs/React-exercise/
+
+Links:
+https://platform.openai.com/playground/chat?models=gpt-4o-mini
+
+OpenAI Node docs: https://github.com/openai/openai-node/
+OpenAI Node docs API: https://github.com/openai/openai-node/blob/master/api.md
+OpenAI Node Examples: https://github.com/openai/openai-node/tree/master/examples
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
