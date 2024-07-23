@@ -68,7 +68,7 @@ async function createAssistant(uniqueId: string, vectorStoreId: string) {
     const assistant = await openai.beta.assistants.create({
       name: "Code Assistant ".concat(uniqueId),
       instructions: "This GPT assists with reviewing, understanding, and suggesting changes to your code repository. It can analyze a code repository and answer questions about it. The GPT can reference the provided files to give specific and accurate advice.",
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       tools: [{ type: "file_search" }],
       tool_resources: {
         file_search: {
