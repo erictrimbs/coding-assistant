@@ -24,6 +24,9 @@ async function fetchRepoContents(uniqueId: string, owner: string, repo: string, 
         owner, repo, path: item.path, ref
       });
 
+      if (!('content' in fileContent)) {
+        continue;
+      }
       const content = Buffer.from(fileContent.content, 'base64').toString('utf-8');
 
       const file = new File([content], `${uniqueId}_${item.path}.txt`, { type: 'text/plain' });

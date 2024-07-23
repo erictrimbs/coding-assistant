@@ -2,8 +2,13 @@
 import { useState } from 'react';
 import axios from 'axios';
 
+interface Message {
+  role: string;
+  content: string;
+}
+
 function Chat({ chatIds }: { chatIds: { assistantId: string, threadId: string } }) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const { assistantId, threadId } = chatIds;
 
