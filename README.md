@@ -1,5 +1,8 @@
 Use an example GitHub Repo: https://github.com/erictrimbs/React-exercise/
 
+- You will need your own OpenAI and GitHub API keys to run
+- Change gpt-4o to gpt-4o-mini to remain on free tier of OpenAI API
+
 Links:
 https://platform.openai.com/playground/chat?models=gpt-4o-mini
 
@@ -11,7 +14,7 @@ Run dev:
 ```bash
 npm run dev
 ```
-
+put secret keys in .env
 
 
 
