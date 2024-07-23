@@ -16,22 +16,22 @@ async function fetchRepoContents(uniqueId: string, owner: string, repo: string, 
     repoContents = [repoContents];
   }
 
-  let fileIds: Array<string> = [];
+  const fileIds: Array<string> = [];
 
-  for (const item of repoContents) {
+  await Promise.all(repoContents.map(async (item) => {
     if (item.type === 'file') {
-      const { data: fileContent } = await github_octokit.rest.repos.getContent({
-        owner, repo, path: item.path, ref
-      });
-
-      if (!('content' in fileContent)) {
-        continue;
-      }
-      const content = Buffer.from(fileContent.content, 'base64').toString('utf-8');
-
-      const file = new File([content], `${uniqueId}_${item.path}.txt`, { type: 'text/plain' });
-
       try {
+        const { data: fileContent } = await github_octokit.rest.repos.getContent({
+          owner, repo, path: item.path, ref
+        });
+
+        if (!('content' in fileContent)) {
+          return;
+        }
+
+        const content = Buffer.from(fileContent.content, 'base64').toString('utf-8');
+        const file = new File([content], `${uniqueId}_${item.path}.txt`, { type: 'text/plain' });
+
         const uploadedFile = await openai.files.create({
           file,
           purpose: 'assistants',
@@ -42,9 +42,9 @@ async function fetchRepoContents(uniqueId: string, owner: string, repo: string, 
       }
     } else if (item.type === 'dir') {
       const dirFileIds = await fetchRepoContents(uniqueId, owner, repo, item.path, ref);
-      fileIds = fileIds.concat(dirFileIds);
+      fileIds.push(...dirFileIds);
     }
-  }
+  }));
 
   return fileIds;
 }
