@@ -116,12 +116,14 @@ export async function POST(req: Request) {
     console.log("Thread ID:", thread.id);
 
     // 6. Send response
-    return new Response(JSON.stringify({ status: 200, assistantId: assistantId, threadId: thread.id }), {
+    return new Response(JSON.stringify({ assistantId: assistantId, threadId: thread.id }), {
+      status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ status: 500, error: 'An error occurred while processing the repository.'.concat(errormsg) }), {
+    return new Response(JSON.stringify({ error: 'An error occurred while processing the repository.'.concat(errormsg) }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json' },
     });
   }

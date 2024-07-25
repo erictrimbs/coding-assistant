@@ -26,17 +26,20 @@ export async function POST(req: Request) {
       console.log('Run created and returned message: ' + JSON.stringify(response));
 
       if (response.type !== "text") {
-        return new Response(JSON.stringify({ status: 200, message: "Model returned an image. Try again." }))
+        return new Response(JSON.stringify({ message: "Model returned an image. Try again." }))
       }
       const responseText = response.text.value;
-      return new Response(JSON.stringify({ status: 200, message: responseText }));
+      return new Response(JSON.stringify({ message: responseText }));
     }
     else if (run.status in ['expired', 'failed', 'cancelled', 'incomplete', 'requires_action']) {
-      return new Response(JSON.stringify({ status: 200, message: "Model didn't load. Try again." }))
+      return new Response(JSON.stringify({ message: "Model didn't load. Try again." }))
     }
 
   } catch (error) {
     console.error('Error processing chat message:', error);
-    return new Response(JSON.stringify({ status: 500, error: 'An error occurred while processing the chat message.' }));
+    return new Response(
+      JSON.stringify({ error: 'An error occurred while processing the chat message.' }),
+      { status: 500 }
+    );
   }
 }
