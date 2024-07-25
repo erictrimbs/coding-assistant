@@ -26,6 +26,7 @@ export default function Home() {
         <br />- Continue to chat to the assistant, give it up to 30-60 seconds to respond.
         <br />- Common error: make sure to specify the branch name by appending &quot;/tree/&lt;branch&gt;&quot;
         <br />- Limitations: the tool can only process the first 100 files it sees (higher up in repository nesting is first). It will skip most non-text files. The tool may break if I exceed my OpenAI or GitHub API limits.
+        <br />Made with &lt;3 by Eric Trimble at https://github.com/erictrimbs/coding-assistant/
       </p>
     </div>
   );
