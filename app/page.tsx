@@ -20,7 +20,7 @@ export default function Home() {
         <Chat chatIds={chatIds} />
       )}
       <p><br />Usage guide:<br />
-        - Input your PUBLIC GitHub repository for processing in the format: "https://github.com/erictrimbs/coding-assistant" or, to point to a specific branch, "https://github.com/erictrimbs/coding-assistant/tree/main".<br />
+        - Input your PUBLIC GitHub repository for processing in the format: &quot;https://github.com/erictrimbs/coding-assistant&quot; or, to point to a specific branch, &quot;https://github.com/erictrimbs/coding-assistant/tree/&lt;main&gt;&quot;.<br />
         - Wait for processing as the backend uploads your repo to the assistant (ChatGPT gpt-4o).<br />
         - Sometimes, the assistant will take a minute to process your files even after the chat window has opened!<br />
         - Continue to chat to the assistant, give it up to 30-60 seconds to respond.
