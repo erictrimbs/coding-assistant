@@ -6,7 +6,7 @@ const github_octokit = new Octokit({ auth: process.env.GITHUB_SECRET_KEY });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
 
 async function fetchRepoContents(uniqueId: string, owner: string, repo: string, path: string, ref: string, fileIds: Array<string> = []) {
-  if (fileIds.length === 100) return fileIds;
+  if (fileIds.length >= 100) return fileIds;
 
   let { data: repoContents } = await github_octokit.rest.repos.getContent({
     owner, repo, path, ref
@@ -39,8 +39,9 @@ async function fetchRepoContents(uniqueId: string, owner: string, repo: string, 
           console.error(error);
         }
       }
-    } else if (item.type === 'dir') {
-      await fetchRepoContents(uniqueId, owner, repo, item.path, ref, fileIds);
+      else if (item.type === 'dir') {
+        await fetchRepoContents(uniqueId, owner, repo, item.path, ref, fileIds);
+      }
     }
   }));
 
