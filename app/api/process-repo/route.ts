@@ -5,9 +5,9 @@ import OpenAI from 'openai';
 const github_octokit = new Octokit({ auth: process.env.GITHUB_SECRET_KEY });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
 
-let errormsg = "";
+async function fetchRepoContents(uniqueId: string, owner: string, repo: string, path: string, ref: string, fileIds: Array<string> = []) {
+  if (fileIds.length === 100) return fileIds;
 
-async function fetchRepoContents(uniqueId: string, owner: string, repo: string, path: string, ref: string) {
   let { data: repoContents } = await github_octokit.rest.repos.getContent({
     owner, repo, path, ref
   });
@@ -16,33 +16,31 @@ async function fetchRepoContents(uniqueId: string, owner: string, repo: string, 
     repoContents = [repoContents];
   }
 
-  const fileIds: Array<string> = [];
-
   await Promise.all(repoContents.map(async (item) => {
-    if (item.type === 'file') {
-      try {
-        const { data: fileContent } = await github_octokit.rest.repos.getContent({
-          owner, repo, path: item.path, ref
-        });
+    if (fileIds.length < 100) {
 
-        if (!('content' in fileContent)) {
-          return;
+      if (item.type === 'file') {
+        try {
+          const { data: fileContent } = await github_octokit.rest.repos.getContent({
+            owner, repo, path: item.path, ref
+          });
+
+          if ('content' in fileContent) {
+            const content = Buffer.from(fileContent.content, 'base64').toString('utf-8');
+            const file = new File([content], `${uniqueId}_${item.path}.txt`, { type: 'text/plain' });
+
+            const uploadedFile = await openai.files.create({
+              file,
+              purpose: 'assistants',
+            });
+            fileIds.push(uploadedFile.id);
+          }
+        } catch (error) {
+          console.error(error);
         }
-
-        const content = Buffer.from(fileContent.content, 'base64').toString('utf-8');
-        const file = new File([content], `${uniqueId}_${item.path}.txt`, { type: 'text/plain' });
-
-        const uploadedFile = await openai.files.create({
-          file,
-          purpose: 'assistants',
-        });
-        fileIds.push(uploadedFile.id);
-      } catch (error) {
-        console.error(error);
       }
     } else if (item.type === 'dir') {
-      const dirFileIds = await fetchRepoContents(uniqueId, owner, repo, item.path, ref);
-      fileIds.push(...dirFileIds);
+      await fetchRepoContents(uniqueId, owner, repo, item.path, ref, fileIds);
     }
   }));
 
@@ -68,7 +66,7 @@ async function createAssistant(uniqueId: string, vectorStoreId: string) {
     const assistant = await openai.beta.assistants.create({
       name: "Code Assistant ".concat(uniqueId),
       instructions: "This GPT assists with reviewing, understanding, and suggesting changes to your code repository. It can analyze a code repository and answer questions about it. The GPT can reference the provided files to give specific and accurate advice.",
-      model: "gpt-4o",
+      model: "gpt-4o-mini",
       tools: [{ type: "file_search" }],
       tool_resources: {
         file_search: {
@@ -100,7 +98,7 @@ export async function POST(req: Request) {
     const [, owner, repo, branch] = match;
 
     // 2. Get and upload repository contents recursively
-    const fileIds = await fetchRepoContents(uniqueId, owner, repo, '', branch || 'main');
+    const fileIds = (await fetchRepoContents(uniqueId, owner, repo, '', branch || 'main')).slice(0, 100);
     console.log("fileIds: " + JSON.stringify(fileIds));
 
     // 3. Create Vector Store
@@ -122,7 +120,7 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ error: 'An error occurred while processing the repository.'.concat(errormsg) }), {
+    return new Response(JSON.stringify({ error: 'An error occurred while processing the repository.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
     });

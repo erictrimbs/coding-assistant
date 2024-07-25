@@ -20,10 +20,12 @@ export default function Home() {
         <Chat chatIds={chatIds} />
       )}
       <p><br />Usage guide:<br />
-        - Input your PUBLIC GitHub repository for processing in the format: &quot;https://github.com/erictrimbs/coding-assistant&quot; or, to point to a specific branch, &quot;https://github.com/erictrimbs/coding-assistant/tree/&lt;main&gt;&quot;.<br />
-        - Wait for processing as the backend uploads your repo to the assistant (ChatGPT gpt-4o).<br />
-        - Sometimes, the assistant will take a minute to process your files even after the chat window has opened!<br />
-        - Continue to chat to the assistant, give it up to 30-60 seconds to respond.
+        - Input your PUBLIC GitHub repository for processing in the format: &quot;https://github.com/erictrimbs/coding-assistant/tree/&lt;branch&gt;&quot;.
+        <br />- Wait for processing as the backend uploads your repo to the assistant (ChatGPT gpt-4o-mini).
+        <br />- Sometimes, the assistant will take a minute to process your files even after the chat window has opened!
+        <br />- Continue to chat to the assistant, give it up to 30-60 seconds to respond.
+        <br />- Common error: make sure to specify the branch name by appending &quot;/tree/&lt;branch&gt;&quot;
+        <br />- Limitations: the tool can only process the first 100 files it sees (higher up in repository nesting is first). It will skip most non-text files. The tool may break if I exceed my OpenAI or GitHub API limits.
       </p>
     </div>
   );
