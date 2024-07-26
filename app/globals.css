@@ -1,29 +1,38 @@
+/* Import Tailwind base, components, and utilities */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Custom properties for colors */
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-  height: 100%;
+  --link-color: 0, 0, 238;
+  /* RGB for blue links */
+  --visited-link-color: 85, 26, 139;
+  /* RGB for purple visited links */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
+/* Base styles */
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
+/* Link styles */
+a {
+  color: rgb(var(--link-color));
+  text-decoration: underline;
+  /* Ensure links are underlined */
+}
+
+a:visited {
+  color: rgb(var(--visited-link-color));
+  /* Different color for visited links */
+}
+
+/* Utility for balanced text wrap */
 @layer utilities {
   .text-balance {
     text-wrap: balance;

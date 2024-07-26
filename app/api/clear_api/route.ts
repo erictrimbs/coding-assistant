@@ -18,10 +18,10 @@ export async function GET() {
       ...assistants.data.map((assistant: OpenAI.Beta.Assistants.Assistant) => openai.beta.assistants.del(assistant.id))
     ]);
 
-    return new Response(JSON.stringify({ status: 200, content: 'Deleted' }));
+    return new Response(JSON.stringify({ content: 'Deleted' }));
 
   } catch (error) {
     console.error('Error deleting data', error);
-    return new Response(JSON.stringify({ status: 500, error: 'An error occurred while clearing the data.' }));
+    return new Response(JSON.stringify({ error: 'An error occurred while clearing the data, but it was probably all cleared anyway.' }), { status: 500 });
   }
 }
